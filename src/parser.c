@@ -4,19 +4,47 @@
 #include "../include/parser.h"
 
 
+/**
+ * @brief Open a CSV file in read mode.
+ * 
+ * @param filename A pointer to a string representing the file name.
+ * 
+ * @return FILE* A pointer to FILE object if the file is successfully opened;
+ *               NULL if the file could not be opened.
+ */
 FILE* openCSV(char *filename) {
     FILE *fptr = fopen(filename, "r");
+
+    if (fptr == NULL) {
+        perror("Error opening CSV file\n");
+    }
 
     return fptr;
 }
 
 
+/**
+ * @brief Closes the CSV file.
+ *
+ * @param fptr A pointer to the file to be closed.
+ * 
+ * @return None.
+ */
 void closeCSV(FILE *fptr) {
     fclose(fptr);
     return;
 }
 
 
+/**
+ * @brief Checks if the given date is invalid based on year and month.
+ * 
+ * If the date is before March 2024, it returns returns 1 (invalid). Otherwise, it returns 0 (valid).
+ *
+ * @param date A string representing the date, having the first 7 characters as "YYYY-MM".
+ * 
+ * @return 1 if the date is invalid, 0 if valid.
+ */
 int isDateInvalid(char date[MAX_CHAR]) {
     int year, month;
     char yearStr[5], monthStr[3];
@@ -39,10 +67,21 @@ int isDateInvalid(char date[MAX_CHAR]) {
 }
 
 
+/**
+ * @brief Creates a new Entry from the provided columns.
+ * 
+ * This function allocates memory for a new `Entry` and populates its fields 
+ * using the values in the `columns` array.
+ *
+ * @param columns An array of strings representing the CSV columns.
+ * 
+ * @return A pointer to the newly created `Entry`, or `NULL` if memory allocation fails.
+ */
 Entry* createNewEntry(char *columns[CSV_NUM_COLUMNS]) {
     Entry *aux = (Entry*)malloc(sizeof(Entry));
     if (aux == NULL){
-        return NULL;
+        fprintf(stderr, "Error in memory allocation.\n");
+        exit(1);
     }
 
     strcpy(aux->device, columns[DEVICE]);
@@ -58,11 +97,24 @@ Entry* createNewEntry(char *columns[CSV_NUM_COLUMNS]) {
 }
 
 
+/**
+ * @brief Reads a CSV file and stores entries in blocks.
+ * 
+ * This function reads `totalBlockNumber` blocks from the CSV file, processes 
+ * each line, and creates an `Entry` for valid data. It returns a pointer to 
+ * an array of `Entry` pointers.
+ *
+ * @param fptr File pointer to the opened CSV file.
+ * @param totalBlockNumber Number of lines to read.
+ * @param delimiter The delimiter used to separate CSV columns.
+ * 
+ * @return A pointer to an array of `Entry` pointers.
+ */
 Entry** readFileByBlock(FILE *fptr, int totalBlockNumber, char delimiter[2]) {
     int indexCurrentBlock = 0;
     Entry **blocks = (Entry**)malloc(totalBlockNumber * sizeof(Entry*));
     if (blocks == NULL){
-        printf("ERROR.");
+        fprintf(stderr, "Error in memory allocation.\n");
         exit(0);
     }
 
@@ -108,10 +160,6 @@ Entry** readFileByBlock(FILE *fptr, int totalBlockNumber, char delimiter[2]) {
         }
         
         Entry *aux = createNewEntry(columns);
-        if (aux == NULL) {
-            printf("ERROR\n");
-            exit(0);
-        }
 
         blocks[indexCurrentBlock++] = aux;
 
@@ -127,6 +175,13 @@ Entry** readFileByBlock(FILE *fptr, int totalBlockNumber, char delimiter[2]) {
 }
 
 
+/**
+ * @brief Frees memory allocated for an array of column strings.
+ *
+ * @param columns Array of strings representing CSV columns.
+ * 
+ * @return None.
+ */
 void freeColumnsArray(char *columns[CSV_NUM_COLUMNS]){
     int i;
 
@@ -137,6 +192,15 @@ void freeColumnsArray(char *columns[CSV_NUM_COLUMNS]){
 }
 
 
+/**
+ * @brief Frees memory allocated for an array of Entry structures.
+ * 
+ *
+ * @param block Pointer to the array of `Entry` pointers.
+ * @param totalBlockNumber Number of elements in the `block` array.
+ * 
+ * @return None.
+ */
 void freeBlock(Entry **block, int totalBlockNumber){    
     int i;
 
