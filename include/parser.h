@@ -10,7 +10,7 @@
  */
 typedef struct entry {
     char device[MAX_CHAR];  // Device name.
-    char date[30];          // Date in "YYYY-MM-DD HH:MM:SS.ffffff"
+    char date[8];          // Date in "YYYY-MM"
     float temperature;      // Temperature value.
     float humidity;         // Humidity value.
     float luminosity;       // Luminosity value.
@@ -32,10 +32,14 @@ enum csvcolumns {
 FILE* openCSV(char *filename);
 void closeCSV(FILE *fptr);
 int isDateInvalid(char date[MAX_CHAR]);
-Entry* createNewEntry(char *columns[CSV_NUM_COLUMNS]);
-Entry** readFileByBlock(FILE *fptr, int totalBlockNumber, char delimiter[2]);
-void freeColumnsArray(char *columns[CSV_NUM_COLUMNS]);
+void formatDate(char **columns);
+Entry* createNewEntry(char **columns);
+void freeColumnsArray(char **columns);
 void freeBlock(Entry **block, int totalBlockNumber);
+Entry** readFileByBlock(FILE *fptr, int totalBlockNumber, char delimiter[2]);
+Entry** readFileByMonthYear(FILE *fptr, int totalBlockNumber, int *totalEntries, char delimiter[2]);
+char** getColumns(char string[MAX_CHAR], char delimiter[2]);
+char **readLineReturnColumns(FILE *fptr, char delimiter[2]);
 
 
 #endif
