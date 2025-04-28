@@ -283,69 +283,6 @@ char** getColumns(char string[MAX_CHAR], char delimiter[2]){
 
 
 /**
- * @brief Reads a CSV file and stores entries in blocks.
- * 
- * This function reads `totalBlockNumber` blocks from the CSV file, processes 
- * each line, and creates an `Entry` for valid data. It returns a pointer to 
- * an array of `Entry` pointers.
- *
- * @param fptr File pointer to the opened CSV file.
- * @param totalBlockNumber Number of lines to read.
- * @param delimiter The delimiter used to separate CSV columns.
- * 
- * @return A pointer to an array of `Entry` pointers.
- */
-Entry** readFileByBlock(FILE *fptr, int totalBlockNumber, char delimiter[2]) {
-    int indexCurrentBlock = 0;
-    
-    Entry **blocks = (Entry**)malloc(totalBlockNumber * sizeof(Entry*));
-    if (blocks == NULL){
-        fprintf(stderr, "Error in memory allocation.\n");
-        exit(0);
-    }
-
-    int invalidEntry = 0;
-    while (indexCurrentBlock < totalBlockNumber){
-        int i;
-        char string[MAX_CHAR];
-        char **columns;
-
-        if (fgets(string, MAX_CHAR, fptr) == NULL){
-            break;
-        }
-
-        columns = getColumns(string, delimiter);
-
-        if (columns == NULL){
-            continue;
-        }
-        
-        invalidEntry = isDateInvalid(columns[DATE]);
-
-        if (invalidEntry){
-            invalidEntry = 0;
-            freeColumnsArray(columns);
-            continue;
-        }
-        
-        formatDate(columns);
-        Entry *aux = createNewEntry(columns);
-
-        blocks[indexCurrentBlock++] = aux;
-
-        freeColumnsArray(columns);
-    }
-
-    if (indexCurrentBlock == 0){
-        free(blocks);
-        blocks = NULL;
-    }
-
-    return blocks;
-}
-
-
-/**
  * @brief Frees memory allocated for an array of column strings.
  *
  * @param columns Array of strings representing CSV columns.

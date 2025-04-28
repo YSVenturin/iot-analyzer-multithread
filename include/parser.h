@@ -36,7 +36,6 @@ void formatDate(char **columns);
 Entry* createNewEntry(char **columns);
 void freeColumnsArray(char **columns);
 void freeBlock(Entry **block, int totalBlockNumber);
-Entry** readFileByBlock(FILE *fptr, int totalBlockNumber, char delimiter[2]);
 Entry** readFileByMonthYear(FILE *fptr, int totalBlockNumber, int *totalEntries, char delimiter[2]);
 char** getColumns(char string[MAX_CHAR], char delimiter[2]);
 char **readLineReturnColumns(FILE *fptr, char delimiter[2]);
