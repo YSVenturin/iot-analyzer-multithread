@@ -6,6 +6,7 @@
         "stdlib.h": "c",
         "analysis.h": "c",
         "thread.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "pthread.h": "c"
     }
 }

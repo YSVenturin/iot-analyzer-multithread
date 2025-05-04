@@ -7,7 +7,6 @@
 #include "thread.h"
 #include "output.h"
 
-#define MAX_DEVICES 100
 
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -43,7 +42,7 @@ void* deviceAnaliseThread(void* arg){
         }
 
         pthread_mutex_lock(&lock);
-        writeMonthlyDeviceAnalysis(device, "./data/output/analyses_monthly.csv");
+        writeMonthlyDeviceAnalysis(device, "./analysis.csv");
         pthread_mutex_unlock(&lock);
     }
 

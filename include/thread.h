@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "analysis.h"
 
+#define MAX_DEVICES 30
+
 /**
  * @brief Struct representing a header from a ReferenceAnalyse list.
  */
