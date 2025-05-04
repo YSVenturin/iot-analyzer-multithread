@@ -8,6 +8,11 @@
 
 int main(){
     int nprocs = sysconf(_SC_NPROCESSORS_ONLN);
+    if (nprocs < 2) {
+        fprintf(stderr, "Error: This program requires at least 2 CPU cores.\n");
+        extit(0);
+    }
+
     int BLOCK_SIZE = 1000;
 
     FILE *fptr = fopen("./analysis.csv", "w");
