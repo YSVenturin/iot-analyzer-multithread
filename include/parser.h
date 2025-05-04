@@ -1,6 +1,7 @@
 #ifndef PARSER_H_
 #define PARSER_H_
 
+#include <stdio.h>
 
 #define MAX_CHAR 400        // Maximum character limit for strings.
 #define CSV_NUM_COLUMNS 12  // NUmber of columns in the CSV file.

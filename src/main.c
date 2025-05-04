@@ -1,41 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <pthread.h>
+
+#include "thread.h"
 #include "parser.h"
 
-
+#include <time.h>
 int main(int argc, char* argv[]){
-    int i, sum = 0;
-    int BLOCK_SIZE = 1000;
-    int entries;
-    char numStr[3];
-    int arr[99] = {0};
-    FILE *fptr = openCSV("./data/input/devices.csv");
+    int nprocs = sysconf(_SC_NPROCESSORS_ONLN);
+    int BLOCK_SIZE = 100;
+    //int nprocs = 1;
 
-    Entry **block = readFileByMonthYear(fptr, BLOCK_SIZE, &entries, "|");
-    while (block != NULL){
-        for (i = 0; i < entries; i++){
-            Entry *aux = block[i];
-            if (aux == NULL)
-                break;
-            
-            strncpy(numStr, aux->device + 20, 2);
-            numStr[2] = '\0';
-            int n = atoi(numStr);
-            arr[n-1] += 1;
-        }
-        freeBlock(block, entries);
-        block = readFileByMonthYear(fptr, BLOCK_SIZE, &entries, "|");
+    FILE *fptr = openCSV("./data/input/devices.csv");
+    ThreadArgs *threadArguments = (ThreadArgs*)malloc(sizeof(ThreadArgs));
+    if (threadArguments == NULL) {
+        fprintf(stderr, "Error in memory allocation.");
+        exit(0);
     }
+
+    threadArguments->blockSize = BLOCK_SIZE;
+    threadArguments->fptr = fptr;
+    threadArguments->nprocs = nprocs;
+    threadArguments->maxNumDevices = 30;
+    
+    clock_t start, end;
+    double cpu_time_used;
+    start = clock();
+
+    pthread_t thread;
+    pthread_create(&thread, NULL, readFileThread, (void*)threadArguments);
+    pthread_join(thread, NULL);
+
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    printf("Time taken: %f seconds\n", cpu_time_used);
+
+    free(threadArguments);
+
     
     closeCSV(fptr);
-
-    for (i=0;i<99;i++){
-        sum += arr[i];
-    }
-    printf("%d valid entries\n", sum);
-    
-    
         
     return 0;
 }

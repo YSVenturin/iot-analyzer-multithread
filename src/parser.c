@@ -120,6 +120,18 @@ void formatDate(char **columns) {
 }
 
 
+int hasNanValue(char **columns) {
+    int i;
+    
+    for (i = 0; i < CSV_NUM_COLUMNS; i++) {
+        if (columns[i] != NULL && strcmp(columns[i], "nan") == 0)
+            return 1;
+    }
+
+    return 0;
+}
+
+
 /**
  * @brief Reads a line from the CSV file and returns the columns as an array of strings.
  * 
@@ -148,10 +160,10 @@ char **readLineReturnColumns(FILE *fptr, char delimiter[2]) {
             continue;
         }
 
-        if (isDateInvalid(columns[DATE])){
+        if (isDateInvalid(columns[DATE]) || hasNanValue(columns)){
             freeColumnsArray(columns);
             continue;
-        }
+        } 
 
         break;
     }
