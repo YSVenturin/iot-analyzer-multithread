@@ -7,7 +7,7 @@
 #include "thread.h"
 #include "output.h"
 
-#define MAX_DEVICES 100 //arrummar
+#define MAX_DEVICES 100
 
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -19,10 +19,10 @@ void* deviceAnaliseThread(void* arg){
 
     while((param->id_thread)<MAX_DEVICES){
 
-        //pthread_mutex_lock(&lock);
+        pthread_mutex_lock(&lock);
         param->id_thread = *(param->id_thread_global);
         (*(param->id_thread_global))++;
-        //pthread_mutex_unlock(&lock);
+        pthread_mutex_unlock(&lock);
 
         snprintf(device_name, MAX_CHAR, "sirrosteste_UCS_AMV-%02d",param->id_thread);
 
@@ -37,7 +37,6 @@ void* deviceAnaliseThread(void* arg){
             }
         }
 
-        //printf("Dispositivo nao encontrado no bloco\n");
         if(device->analysis_count == 0){
             free(device);
             continue;

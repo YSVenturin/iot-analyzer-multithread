@@ -17,8 +17,6 @@ void writeMonthlyDeviceAnalysis(DeviceAnalyse* device, char* filename) {
         return;
     }
 
-    
-
     fprintf(
         file,"%s;%s;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f;%0.2f\n",
             device->device_name,
