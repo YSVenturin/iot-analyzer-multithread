@@ -2,15 +2,14 @@
 
 #include "analysis.h"
 
+void writeHeader(char* filename) {
+    FILE *fptr = fopen(filename, "w");
+    fprintf(fptr,"device;ano-mes;sensor;valor_maximo;valor_medio;valor_minimo\n");
+    fclose(fptr);
+}
+
 void writeMonthlyDeviceAnalysis(DeviceAnalyse* device, char* filename) {
-    FILE *file;
-    if (fopen(filename, "r") == NULL) {
-        file = fopen(filename, "w");
-        fprintf(file,"device;ano-mes;sensor;valor_maximo;valor_medio;valor_minimo\n");
-    }
-    else {
-        file = fopen(filename, "a");
-    }
+    FILE *file = fopen(filename, "a");
 
     if(file==NULL){
         printf("Error, file couldn't be opened");

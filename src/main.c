@@ -5,6 +5,7 @@
 
 #include "thread.h"
 #include "parser.h"
+#include "output.h"
 
 int main(){
     int nprocs = sysconf(_SC_NPROCESSORS_ONLN);
@@ -15,10 +16,9 @@ int main(){
 
     int BLOCK_SIZE = 1000;
 
-    FILE *fptr = fopen("./analysis.csv", "w");
-    fclose(fptr);
+    writeHeader("./analysis.csv");
 
-    fptr = openCSV("./data/input/devices.csv");
+    FILE *fptr = openCSV("./data/input/devices.csv");
     ThreadArgs *threadArguments = (ThreadArgs*)malloc(sizeof(ThreadArgs));
     if (threadArguments == NULL) {
         fprintf(stderr, "Error in memory allocation.");

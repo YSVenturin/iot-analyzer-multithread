@@ -7,6 +7,7 @@
         "analysis.h": "c",
         "thread.h": "c",
         "unistd.h": "c",
-        "pthread.h": "c"
+        "pthread.h": "c",
+        "output.h": "c"
     }
 }
