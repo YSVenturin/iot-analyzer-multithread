@@ -105,6 +105,8 @@ device;ano-mes;sensor;valor_maximo;valor_medio;valor_minimo
 ## Kernel Threads
 The threads created are POSIX threads and are managed by the operating system.
 ## Possible Concurrency Issues
+Multiple threads acessing the varible id_thread_global at the same time, resulting in multiple threads with the same id. Fixed by using mutex.
+Multiple threads trying to write on "analyses.csv" at the same time. Also fixed by using mutex.
 ## Authors
 
 - [@YSVenturin](https://github.com/YSVenturin/)
